@@ -1,18 +1,17 @@
 
-const { Telegraf } = require('telegraf')
+const { Telegraf, Context } = require('telegraf')
 const mongoose = require('mongoose')
 const tguser = require('./module/module')
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(`mongodb+srv://codeyogiai:(himanshu1234)@codeyogihelper.2ixkxfk.mongodb.net/?retryWrites=true&w=majority&appName=codeyogihelper`)
   .then(() => console.log('Connected to database'))
   .catch((err) => console.error('Database connection error:', err))
 
-const bot = new Telegraf(process.env.BOT_TOKEN)
+const bot = new Telegraf(`7091410950:AAFQQ5uHP6AgooBgAZ6winS8MaAVrQwYy2M`)
 
 bot.start(async (ctx) => {
-  try {
-    const isuser = await tguser.findOne({ id: ctx.from.id })
+      const isuser = await tguser.findOne({ id: ctx.from.id })
     
     if (!isuser) {
       const newuser = new tguser({
@@ -26,13 +25,16 @@ bot.start(async (ctx) => {
       return ctx.reply('Welcome to the bot!')
     }
     
-    const users = await tguser.find({})
     ctx.reply('Welcome back!')
-    ctx.reply(JSON.stringify(users, null, 2))
-  } catch (error) {
-    console.error('Error in start command:', error)
-    ctx.reply('Sorry, there was an error processing your request')
-  }
+    })
+
+const levelarr ={
+  5:`<h1>Welcome to codeyogi</h1> `
+}
+const level = function(ctx){return ctx.massage.text}
+
+bot.hears(`${level}`, async function (ctx){
+  ctx.replyWithHTML(levelarr[level])
 })
 
 bot.catch((err, ctx) => {
