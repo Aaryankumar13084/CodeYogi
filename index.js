@@ -133,6 +133,7 @@ const levelarr = {
 
 bot.on('text', async (ctx) => {
   const userMessage = ctx.message.text
+console.log(userMessage)
   if (levelarr[userMessage]) {
       await ctx.reply(levelarr[userMessage])
     }else{
