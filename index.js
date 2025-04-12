@@ -28,13 +28,21 @@ bot.start(async (ctx) => {
     ctx.reply('Welcome back!')
     })
 
-const levelarr ={
-  5:`<h1>Welcome to codeyogi</h1> `
+const levelarr = {
+  "5": "<h1>Welcome to codeyogi</h1>",
+  // Add more levels here as needed
 }
-const level = function(ctx){return ctx.massage.text}
 
-bot.hears(`${level}`, async function (ctx){
-  ctx.replyWithHTML(levelarr[level])
+bot.on('text', async (ctx) => {
+  const userMessage = ctx.message.text
+  if (levelarr[userMessage]) {
+    try {
+      await ctx.replyWithHTML(levelarr[userMessage])
+    } catch (error) {
+      console.error('Error sending level:', error)
+      ctx.reply('Error sending level content')
+    }
+  }
 })
 
 bot.catch((err, ctx) => {
