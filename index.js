@@ -12,6 +12,7 @@ const bot = new Telegraf(`7091410950:AAFQQ5uHP6AgooBgAZ6winS8MaAVrQwYy2M`)
 
 bot.start(async (ctx) => {
       const isuser = await tguser.findOne({ id: ctx.from.id })
+console.log(ctx.from)
     
     if (!isuser) {
       const newuser = new tguser({
