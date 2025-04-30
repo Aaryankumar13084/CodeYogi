@@ -50,28 +50,42 @@ bot.command('profile', async (ctx) =>{
 
 // 📌 Command to send a message to all registered users  
 bot.command("broadcast", async (ctx) => {
-  const adminId =7503197657;  
+  const adminId = 7503197657;
 
-  
+  // Check if the user is admin
+  if (ctx.from.id !== adminId) {
+    return ctx.reply("❌ You are not authorized to use this command.");
+  }
 
+  // Extract the message
   const messageText = ctx.message.text.split(" ").slice(1).join(" ");
   if (!messageText) {
-    return ctx.reply("⚠ Please provide a message. Example: `/broadcast This is a test message`");
+    return ctx.reply("⚠ Please provide a message. Example:\n`/broadcast This is a test message`", {
+      parse_mode: "Markdown"
+    });
   }
 
   try {
     const users = await tguser.find();
+    let successCount = 0;
+
     for (const user of users) {
       try {
-        await bot.telegram.sendMessage(user.telegramId, `📢 *Announcement:*\n\n${messageText}`, { parse_mode: "Markdown" });
+        await bot.telegram.sendMessage(
+          user.telegramId,
+          `📢 *Announcement:*\n\n${messageText}`,
+          { parse_mode: "Markdown" }
+        );
+        successCount++;
       } catch (error) {
-        console.error(`Error sending message to ${user.telegramId}:`, error);
+        console.error(`Error sending to ${user.telegramId}:`, error);
       }
     }
-    ctx.reply("✅ Message sent to all registered users.");
+
+    ctx.reply(`✅ Broadcast complete. Message sent to ${successCount} users.`);
   } catch (err) {
     console.error("Broadcast Error:", err);
-    ctx.reply("❌ Failed to send the message.");
+    ctx.reply("❌ Failed to send the message due to an internal error.");
   }
 });
 
