@@ -48,6 +48,35 @@ bot.command('profile', async (ctx) =>{
 })
 
 
+// 📌 Command to send a message to all registered users  
+bot.command("broadcast", async (ctx) => {
+  const adminId = 7503197657;  
+
+  if (ctx.from.id.toString() !== adminId) {
+    return ctx.reply("❌ You are not authorized to use this command.");
+  }
+
+  const messageText = ctx.message.text.split(" ").slice(1).join(" ");
+  if (!messageText) {
+    return ctx.reply("⚠ Please provide a message. Example: `/broadcast This is a test message`");
+  }
+
+  try {
+    const users = await User.find();
+    for (const user of users) {
+      try {
+        await bot.telegram.sendMessage(user.telegramId, `📢 *Announcement:*\n\n${messageText}`, { parse_mode: "Markdown" });
+      } catch (error) {
+        console.error(`Error sending message to ${user.telegramId}:`, error);
+      }
+    }
+    ctx.reply("✅ Message sent to all registered users.");
+  } catch (err) {
+    console.error("Broadcast Error:", err);
+    ctx.reply("❌ Failed to send the message.");
+  }
+});
+
 const levelarr = {
   "4.1": `https://editor.codeyogi.io/u/c7d20d2c0f79640618650845163522e7/s/17fa1b81121ce6234e23f130fddba3cb108ac74dcc42d0e37067d8a0cfb1e5a6`,
   "6.1":`https://editor.codeyogi.io/u/c7d20d2c0f79640618650845163522e7/s/857b13c4440091988b7c078af02b23707765c6c41be605c01a2cb0e0af69da6b`,
