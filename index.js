@@ -50,7 +50,7 @@ bot.command('profile', async (ctx) =>{
 
 // 📌 Command to send a message to all registered users  
 bot.command("broadcast", async (ctx) => {
-  const adminId = 7503197657;  
+  const adminId =7503197657;  
 
   if (ctx.from.id.toString() !== adminId) {
     return ctx.reply("❌ You are not authorized to use this command.");
