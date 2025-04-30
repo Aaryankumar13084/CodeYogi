@@ -52,9 +52,7 @@ bot.command('profile', async (ctx) =>{
 bot.command("broadcast", async (ctx) => {
   const adminId =7503197657;  
 
-  if (ctx.from.id.toString() !== adminId) {
-    return ctx.reply("❌ You are not authorized to use this command.");
-  }
+  
 
   const messageText = ctx.message.text.split(" ").slice(1).join(" ");
   if (!messageText) {
