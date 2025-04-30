@@ -8,7 +8,7 @@ mongoose.connect('mongodb+srv://codeyogiai:(himanshu1234)@codeyogihelper.2ixkxfk
   .then(() => console.log('Connected to database'))
   .catch((err) => console.error('Database connection error:', err));
 
-const bot = new Telegraf('7091410950:AAFQQ5uHP6AgooBgAZ6winS8MaAVrQwYy2M');
+const bot = new Telegraf('8101874074:AAGnHDuXcygSFECvbipSK0IBQsOX_51zRBM');
 
 // Handle /start command
 bot.start(async (ctx) => {
