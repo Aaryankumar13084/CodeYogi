@@ -60,7 +60,7 @@ bot.command("broadcast", async (ctx) => {
   }
 
   try {
-    const users = await User.find();
+    const users = await tguser.find();
     for (const user of users) {
       try {
         await bot.telegram.sendMessage(user.telegramId, `📢 *Announcement:*\n\n${messageText}`, { parse_mode: "Markdown" });
