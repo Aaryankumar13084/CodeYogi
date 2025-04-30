@@ -1,54 +1,69 @@
 
-const { Telegraf, Context } = require('telegraf')
-const mongoose = require('mongoose')
-const tguser = require('./module/module')
+const { Telegraf, Context } = require('telegraf');
+const mongoose = require('mongoose');
+const tguser = require('./module/module');
 
 // Connect to MongoDB
-mongoose.connect(`mongodb+srv://codeyogiai:(himanshu1234)@codeyogihelper.2ixkxfk.mongodb.net/?retryWrites=true&w=majority&appName=codeyogihelper`)
+mongoose.connect('mongodb+srv://codeyogiai:(himanshu1234)@codeyogihelper.2ixkxfk.mongodb.net/?retryWrites=true&w=majority&appName=codeyogihelper')
   .then(() => console.log('Connected to database'))
-  .catch((err) => console.error('Database connection error:', err))
+  .catch((err) => console.error('Database connection error:', err));
 
-const bot = new Telegraf(`7091410950:AAFQQ5uHP6AgooBgAZ6winS8MaAVrQwYy2M`)
+const bot = new Telegraf('7091410950:AAFQQ5uHP6AgooBgAZ6winS8MaAVrQwYy2M');
 
+// Handle /start command
 bot.start(async (ctx) => {
-      const isuser = await tguser.findOne({ id: ctx.from.id })
-console.log(ctx.from)
-    
-    if (!isuser) {
-      const newuser = new tguser({
-        first_name: ctx.from.first_name,
-        last_name: ctx.from.last_name,
-        id: ctx.from.id,
-        username: ctx.from.username,
-      })
-      await newuser.save()
-      console.log('New user added')
-      return ctx.reply(`Welcome to the CodeYogi Helper Bot! me ek ai bot hu jis se tum apne codeyogi levels ke assignment ko solve kar sakte ho kisi bhi level ke assignment ke liye apne assignment ka number likho mare paas abhi 4.1 se 50.1 tak ke assignment hai. assignmrent ko solve karne ke liye apne assignment ka number likho
+  const isuser = await tguser.findOne({ id: ctx.from.id });
+  console.log(ctx.from);
 
-   👉 ex 50.1 or 4.1 etc.  
-   
-👍👍👍👍👍👍👍👍👍👍👍👍👍      
-        `)
-    }
-    
-    ctx.reply(`Welcome back to the CodeYogi Helper Bot! me ek ai bot hu jis se tum apne codeyogi levels ke assignment ko solve kar sakte ho kisi bhi level ke assignment ke liye apne assignment ka number likho mare paas abhi 4.1 se 50.1 tak ke assignment hai. assignmrent ko solve karne ke liye apne assignment ka number likho
-
-   👉 ex 50.1 or 4.1 etc.  
-   
-👍👍👍👍👍👍👍👍👍👍👍👍👍      
-              `)
-    })
-
-
-bot.command('profile', async (ctx) =>{
-  const user = await tguser.findOne({ id: ctx.from.id })
-  if (user){
-    ctx.reply(`First Name: ${user.first_name}\nLast Name: ${user.last_name}\nUsername: ${user.username}\nID: ${user.id}`)
+  if (!isuser) {
+    const newuser = new tguser({
+      first_name: ctx.from.first_name,
+      last_name: ctx.from.last_name,
+      id: ctx.from.id,
+      username: ctx.from.username,
+    });
+    await newuser.save();
+    console.log('New user added');
+    return ctx.reply(`
+      Welcome to the CodeYogi Helper Bot! 
+      Me ek AI bot hoon, jis se tum apne CodeYogi levels ke assignment ko solve kar sakte ho.
+      Kisi bhi level ke assignment ke liye apne assignment ka number likho.
+      Mare paas abhi 4.1 se 50.1 tak ke assignments hain.
+      
+      👉 Example: 50.1 or 4.1 etc.
+      
+      👍👍👍👍👍👍👍👍👍👍👍👍👍
+    `);
   }
-})
 
+  ctx.reply(`
+    Welcome back to the CodeYogi Helper Bot! 
+    Me ek AI bot hoon, jis se tum apne CodeYogi levels ke assignment ko solve kar sakte ho.
+    Kisi bhi level ke assignment ke liye apne assignment ka number likho.
+    Mare paas abhi 4.1 se 50.1 tak ke assignments hain.
+    
+    👉 Example: 50.1 or 4.1 etc.
+    
+    👍👍👍👍👍👍👍👍👍👍👍👍👍
+  `);
+});
 
-// 📌 Command to send a message to all registered users  
+// Command to show user profile
+bot.command('profile', async (ctx) => {
+  const user = await tguser.findOne({ id: ctx.from.id });
+  if (user) {
+    ctx.reply(`
+      First Name: ${user.first_name}
+      Last Name: ${user.last_name}
+      Username: ${user.username}
+      ID: ${user.id}
+    `);
+  } else {
+    ctx.reply('❌ No user data found.');
+  }
+});
+
+// Command to broadcast message to all users
 bot.command("broadcast", async (ctx) => {
   const adminId = 7503197657;
 
@@ -72,13 +87,13 @@ bot.command("broadcast", async (ctx) => {
     for (const user of users) {
       try {
         await bot.telegram.sendMessage(
-          user.telegramId,
+          user.id,
           `📢 *Announcement:*\n\n${messageText}`,
           { parse_mode: "Markdown" }
         );
         successCount++;
       } catch (error) {
-        console.error(`Error sending to ${user.telegramId}:`, error);
+        console.error(`Error sending to ${user.id}:`, error);
       }
     }
 
@@ -88,6 +103,8 @@ bot.command("broadcast", async (ctx) => {
     ctx.reply("❌ Failed to send the message due to an internal error.");
   }
 });
+
+
 
 const levelarr = {
   "4.1": `https://editor.codeyogi.io/u/c7d20d2c0f79640618650845163522e7/s/17fa1b81121ce6234e23f130fddba3cb108ac74dcc42d0e37067d8a0cfb1e5a6`,
