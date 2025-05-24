@@ -194,9 +194,7 @@ bot.on('text', async (ctx) => {
 console.log(userMessage)
   if (levelarr[userMessage]) {
       await ctx.reply(levelarr[userMessage])
-    }else{
-      await ctx.reply(`Invalid level number. Please enter a valid level number. ex 4.1 or 6.1 etc.`)
-    }
+      }
 
 })
 
